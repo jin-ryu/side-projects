@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.coupon.coupongroup.mapper.CouponGroupMapper">
+	
+	<!-- 쿠폰 그룹 생성 -->
+	<insert id="insertCouponGroup" parameterType="com.example.coupon.coupongroup.param.CouponGroupParam" > 
+		INSERT INTO coupon_groups
+		(
+			name, 
+			issuer_id, 
+			code, 
+			status, 
+			amount, 
+			max_count,
+			valid_from_dt, 
+			valid_to_dt, 
+			created_at
+		)
+		VALUES
+		(
+			#{name}, 
+			#{issuerId}, 
+			#{code}, 
+			#{status}, 
+			#{amount}, 
+			#{maxCount}, 
+			#{validFromDt}, 
+			#{validToDt}, 
+			CURRENT_TIMESTAMP
+		)
+	</insert>
+	
+	<!-- 쿠폰 그룹 수정 -->
+	<update id="updateCouponGroup" parameterType="com.example.coupon.coupongroup.param.CouponGroupParam" >
+		UPDATE coupon_groups
+		  SET status = IFNULL(#{status}, status)
+		  	  , name = IFNULL(#{name}, name)
+		  	  , amount = IFNULL(#{amount}, amount)
+		  	  , max_count = IFNULL(#{maxCount}, max_count)
+		  	  , current_count = IFNULL(#{currentCount}, current_count)
+		  	  , valid_from_dt = IFNULL(#{validFromDt}, valid_from_dt)
+		  	  , valid_to_dt = IFNULL(#{validToDt}, valid_to_dt)
+		  	  , updated_at = CURRENT_TIMESTAMP
+		WHERE code = #{code}
+	</update>
+	
+	<!-- 쿠폰 그룹 조회 -->
+	<select id="selectCouponGroup" parameterType="com.example.coupon.coupongroup.param.CouponGroupParam" resultType="com.example.coupon.coupongroup.domain.CouponGroup">
+		SELECT  id,
+				name, 
+				issuer_id, 
+				code, 
+				status, 
+				amount, 
+				max_count,
+				current_count, 
+				valid_from_dt, 
+				valid_to_dt, 
+				created_at
+		  FROM coupon_groups
+		 WHERE code = #{code}
+	</select> 
+	
+	<!-- 쿠폰 그룹 변경 이력 생성 -->
+	<insert id="insertCouponGroupHistory" parameterType="com.example.coupon.coupongroup.param.CouponGroupHistoryParam">
+		INSERT INTO coupon_group_histories
+		(
+			coupon_group_id, 
+			user_id, 
+			data, 
+			created_at
+		)
+		VALUES
+		(
+			#{couponGroupId}, 
+			#{userId}, 
+			#{data}, 
+			CURRENT_TIMESTAMP
+		)
+	</insert>
+
+</mapper>
